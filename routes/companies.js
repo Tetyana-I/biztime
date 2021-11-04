@@ -58,7 +58,7 @@ router.put('/:code', async (req, res, next) => {
       if (results.rows.length === 0) {
         throw new ExpressError(`Can't find a company with the code of ${code}`, 404)
       }
-      return res.send({ user: results.rows[0] })
+      return res.send({ company: results.rows[0] })
     } catch (e) {
       return next(e)
     }
@@ -68,6 +68,7 @@ router.put('/:code', async (req, res, next) => {
 router.delete('/:code', async (req, res, next) => {
     try {
       const { code } = req.params;  
+      console.log("code", code);
       const results = await db.query('DELETE FROM companies WHERE code=$1 RETURNING code', [code])
       if (results.rowCount === 0) {
         throw new ExpressError(`Can't find a company with the code of ${code}`, 404)
