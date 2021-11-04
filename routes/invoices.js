@@ -17,16 +17,19 @@ router.get('/', async (req, res, next) => {
   })
 
 // GET /invoices/[id] - returns `{invoice: {id, amt, paid, add_date, paid_date, company: {code, name, description}}}`
-// ???
 router.get('/:id', async (req, res, next) => {
     try {
       const { id } = req.params;
-      const results = await db.query('SELECT * FROM invoices WHERE id = $1', [id])
-      if (results.rows.length === 0) {
+      const invoiceResults = await db.query('SELECT id, amt, paid, add_date, paid_date, comp_code FROM invoices WHERE id = $1', [id]);
+      if (invoiceResults.rows.length === 0) {
         throw new ExpressError(`Can't find an invoice with the id of ${id}`, 404)
-      }
-      
-      return res.send({ invoice: results.rows[0] })
+      }      
+      const companyResults = await db.query('SELECT * FROM companies WHERE code = $1', [invoiceResults.rows[0]["comp_code"]]);
+      const invoice = invoiceResults.rows[0];
+      invoice.company = companyResults.rows[0];
+      delete invoice.comp_code;
+      return res.send( invoice );
+
     } catch (e) {
       return next(e)
     }
