@@ -1,11 +1,12 @@
 /** BizTime express application. */
 
 const express = require("express");
-const app = express();
+
 const ExpressError = require("./expressError")
 const companiesRoutes = require("./routes/companies");
 const invoicesRoutes = require("./routes/invoices");
  
+const app = express();
 // middleware to parse request-body into JSON
 app.use(express.json());
 

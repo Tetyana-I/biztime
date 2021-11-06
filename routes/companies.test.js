@@ -9,12 +9,11 @@ let testCompany;
 
 beforeEach(async () => {
     const company_result = await db.query(
-        `INSERT INTO companies (code, name, description) VALUES ('apple', 'Apple Computer', 'Maker of OSX.') RETURNING  code, name, description`
+        `INSERT INTO companies (code, name, description)
+          VALUES ('apple', 'Apple Computer', 'Maker of OSX.')
+          RETURNING  code, name, description`
         );
     testCompany = company_result.rows[0];
-    const invoice_res = await db.query(
-        `INSERT INTO invoices (comp_code, amt, paid, paid_date)
-         VALUES ('apple', 100, false, null)`);
 })
 
 afterEach(async () => {
@@ -32,12 +31,6 @@ describe("GET /companies", () => {
         expect(res.statusCode).toBe(200);
         expect(res.body).toEqual({ companies: [{ code: testCompany.code, name: testCompany.name}] })
     })
-    test("Get an empty list of companies without throwing errors", async () => {
-        await request(app).delete('/companies/apple');
-        const res = await request(app).get('/companies')
-        expect(res.statusCode).toBe(200);
-        expect(res.body).toEqual({ companies: [] })
-      })
 })
 
 
@@ -64,10 +57,10 @@ describe("GET /companies/:code", () => {
 
 describe("POST /users", () => {
     test("Creates a single company", async () => {
-        const res = await request(app).post('/companies').send({ code: 'tetra', name: 'Tetra technology', description: 'test description' });
+        const res = await request(app).post('/companies').send({ name: 'Tetra One', description: 'test description' });
         expect(res.statusCode).toBe(201);
         expect(res.body).toEqual({
-            company: { code: 'tetra', name: 'Tetra technology', description: 'test description' }
+            company: { code: 'tetra-one', name: 'Tetra One', description: 'test description' }
         })
     })
   })
