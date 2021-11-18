@@ -58,16 +58,20 @@ describe("GET /invoices/:id", () => {
 
   
 describe("PUT /invoices/:id", () => {
-    // test("Updates an invoice", async () => {
-    //     const res = await request(app).put(
-    //         `/invoices/${testInvoice.id}`).send({ amt: 700 });
-    //     expect(res.statusCode).toBe(200);
-    //     expect(res.body).toEqual({
-    //         invoice: {
-    //             id: testInvoice.id, comp_code: testInvoice.comp_code, amt: 700, paid: true, add_date: testInvoice.add_date, paid_date: testInvoice.paid_date
-    //          }
-    //     })
-    // })
+    test("Updates an invoice", async () => {
+        const res = await request(app).put(
+            `/invoices/${testInvoice.id}`).send({ amt: 700 });
+        expect(res.statusCode).toBe(200);
+        expect(res.body).toEqual({
+            invoice: {
+                id: testInvoice.id,
+                comp_code: testInvoice.comp_code,
+                amt: 700, paid: true, 
+                add_date: testInvoice.add_date.toISOString(), 
+                paid_date: testInvoice.paid_date.toISOString()
+             }
+        })
+    })
     test("Updates an invoice", async () => {
         const res = await request(app).put(
             `/invoices/${testInvoice.id}`).send({ amt: 700 });
